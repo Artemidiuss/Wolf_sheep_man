@@ -16,12 +16,18 @@ class Sheep(RandomWalker):
         super().__init__(unique_id, model, moore=moore)
         self.energy = energy
 
+
     def step(self):
         """
         A model step. Move, then eat grass and reproduce.
         """
         self.random_move()
         living = True
+
+        # Рандомізація швидкості переміщення
+        speed_factor = self.random.random() * 2  # швидкість між 0 і 2
+        for _ in range(int(speed_factor)):
+            self.random_move()
 
         if self.model.grass:
             # Reduce energy
@@ -60,10 +66,15 @@ class Wolf(RandomWalker):
         super().__init__(unique_id, model, moore=moore)
         self.energy = energy
 
+
     def step(self):
         self.random_move()
         self.energy -= 1
 
+        # Рандомізація швидкості переміщення
+        speed_factor = self.random.random() * 2  # швидкість між 0 і 2
+        for _ in range(int(speed_factor)):
+            self.random_move()
         # If there are sheep present, eat one
         x, y = self.pos
         this_cell = self.model.grid.get_cell_list_contents([self.pos])
