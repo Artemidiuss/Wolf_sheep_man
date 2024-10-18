@@ -116,8 +116,21 @@ class GrassPatch(mesa.Agent):
         super().__init__(unique_id, model)
         self.fully_grown = fully_grown
         self.countdown = countdown
+        self.grow_timer = 0
+
 
     def step(self):
+        sheep_count = sum(
+            1 for agent in self.model.grid.get_neighbors(self.pos, moore=True) if isinstance(agent, Sheep))
+
+        if not self.fully_grown:
+            # Чим більше овець поруч, тим повільніше росте трава
+            growth_rate = 3 + sheep_count
+            self.grow_timer += growth_rate
+            if self.grow_timer >= 15:
+                self.fully_grown = True
+                self.grow_timer = 0
+
         if not self.fully_grown:
             if self.countdown <= 0:
                 # Set as fully grown
