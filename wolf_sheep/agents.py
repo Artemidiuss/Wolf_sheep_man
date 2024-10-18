@@ -15,6 +15,8 @@ class Sheep(RandomWalker):
     def __init__(self, unique_id, model, moore, energy=None):
         super().__init__(unique_id, model, moore=moore)
         self.energy = energy
+        self.move_timer = 0  # Лічильник для кроків
+        self.move_interval = 3  # Рухатись раз на 3 кроки
 
 
     def step(self):
@@ -23,6 +25,12 @@ class Sheep(RandomWalker):
         """
         self.random_move()
         living = True
+
+        if self.move_timer == self.move_interval:
+            self.random_move()  # Рухаємося тільки кожен 3-й крок
+            self.move_timer = 0
+        else:
+            self.move_timer += 1
 
         # Рандомізація швидкості переміщення
         speed_factor = self.random.random() * 2  # швидкість між 0 і 2
@@ -65,11 +73,21 @@ class Wolf(RandomWalker):
     def __init__(self, unique_id, model, moore, energy=None):
         super().__init__(unique_id, model, moore=moore)
         self.energy = energy
+        self.move_timer = 0  # Лічильник для кроків
+        self.move_interval = 2  # Рухатись раз на 2 кроки
 
 
     def step(self):
         self.random_move()
         self.energy -= 1
+
+
+        def step(self):
+            if self.move_timer == self.move_interval:
+                self.random_move()  # Рухаємося тільки кожен 2-й крок
+                self.move_timer = 0
+            else:
+                self.move_timer += 1
 
         # Рандомізація швидкості переміщення
         speed_factor = self.random.random() * 2  # швидкість між 0 і 2
